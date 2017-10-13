@@ -2,6 +2,7 @@
 
 REGEX='APP_CONFIG(\[.*\])?'
 BRANCH='develop'
+STATE='added'
 
 read -r -d '' helpMsg << HelpMessage
 
@@ -19,7 +20,7 @@ Defaults:
 HelpMessage
 
 #set -o errexit -o noclobber -o nounset -o pipefail
-params="$(getopt -o r:b:h -l regex:,branch:,help --name "$0" -- "$@")"
+params="$(getopt -o r:b:s:h -l regex:,branch:,state:,help --name "$0" -- "$@")"
 eval set -- "$params"
 
 while true
@@ -31,6 +32,12 @@ do
             ;;
         -b|--branch)
             BRANCH=$2
+            shift 2
+            ;;
+        -s|--state)
+            if [ $2 == 'removed' ]; then
+                 STATE=$2
+            fi
             shift 2
             ;;
         -h|--help)
