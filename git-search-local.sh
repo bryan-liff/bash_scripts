@@ -59,10 +59,17 @@ done
 
 local_commit_shas=`git rev-list $(git rev-parse --abbrev-ref HEAD) --no-merges ^$BRANCH`
 
+# Sets a regex with polarity of initial character
+if [ $STATE == 'removed' ]; then
+	POLAR_REGEX="^\-.*$REGEX"
+else
+	POLAR_REGEX="^\+.*$REGEX"
+fi
+
 declare -a found 
 for sha in $local_commit_shas
 do
-	found_count=`git show $sha|grep -oE $REGEX|wc -l`
+	found_count=`git show $sha|grep -oE $POLAR_REGEX|wc -l`
 	if [ "$found_count" -gt 0 ]; then
 		for el in `echo "$(git show $sha)"|grep -oE "$REGEX"|sort -u`
 		do
@@ -74,4 +81,3 @@ done
 uniques=($(for v in "${found[@]}"; do echo "$v";done| sort| uniq| xargs))
 #echo "${uniques[@]}" #for single line
 printf '%s\n' "${uniques[@]}"; #for multiple lines
-
