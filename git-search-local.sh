@@ -1,6 +1,6 @@
 #!/bin/bash
 
-REGEX='APP_CONFIG(\[.*\])?'
+REGEX='APP_CONFIG\[.*]'
 BRANCH='develop'
 STATE='added'
 
@@ -9,14 +9,15 @@ read -r -d '' helpMsg << HelpMessage
 Searches for REGEX in code changes in commits unique to local branch compared to BRANCH
 
 Usaage: 
-$ git-search-local.sh [-r|--regex REGEX] [-b|--branch BRANCH]
+$ git-search-local.sh [-r|--regex REGEX] [-b|--branch BRANCH] [-s|--state added|removed]
 
 Example: 
-$ git-search-local.sh -r 'APP_CONFIG(\[.*\])?' -b master
+$ git-search-local.sh -r 'APP_CONFIG(\[.*\])?' -b master -s removed
 
 Defaults:
   REGEX: $REGEX
   BRANCH: $BRANCH
+  STATE: $STATE
 HelpMessage
 
 #set -o errexit -o noclobber -o nounset -o pipefail
@@ -61,19 +62,31 @@ local_commit_shas=`git rev-list $(git rev-parse --abbrev-ref HEAD) --no-merges ^
 
 # Sets a regex with polarity of initial character
 if [ $STATE == 'removed' ]; then
-	POLAR_REGEX="^\-.*$REGEX"
+	INITIAL_REGEX="^-"
 else
-	POLAR_REGEX="^\+.*$REGEX"
+    INITIAL_REGEX="^\+"
 fi
+POLAR_REGEX="$INITIAL_REGEX.*$REGEX"
 
-declare -a found 
+declare -a found
+
+add_match_to_found(){
+    match=$(echo $1|grep -oE $REGEX)
+    found+=($match)
+}
+
+
 for sha in $local_commit_shas
 do
-	found_count=`git show $sha|grep -oE $POLAR_REGEX|wc -l`
-	if [ "$found_count" -gt 0 ]; then
-		for el in `echo "$(git show $sha)"|grep -oE "$REGEX"|sort -u`
+	r=$(git show --unified=0 --pretty=oneline --no-notes -w -b $sha|grep -oE $POLAR_REGEX)
+	if [ ${#r} != 0 ]; then
+		mapfile -t arr <<< "$r"
+		for line in "${arr[@]}"
 		do
-			found+=($el);
+            if echo "$line" | grep -q $INITIAL_REGEX
+            then
+                add_match_to_found "$line"
+            fi
 		done
 	fi
 done
