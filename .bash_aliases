@@ -55,4 +55,6 @@ alias rvm-restart='rvm_reload_flag=1 source '\''~/.rvm/scripts/rvm'\'''
 
 alias doco='docker-compose'
 alias dp='docker system prune -a'
+alias gb='export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`'
+alias dcwb='docker-compose run --rm web bash'
 
