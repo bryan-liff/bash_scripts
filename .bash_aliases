@@ -6,6 +6,7 @@
 
 git_delete_origin() {
     git push origin :$1
+    git branch -D $1
 }
 alias gdo=git_delete_origin
 #Usage: gdo BRANCH_NAME
