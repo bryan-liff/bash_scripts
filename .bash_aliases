@@ -50,11 +50,7 @@ alias rspec-q='rspec --tag quarantine'
 # Clear and output log/test.log
 alias tail-t='echo > log/test.log; clear; tail -f log/test.log'
 
-# Re-start/load RVM env
-alias rvm-restart='rvm_reload_flag=1 source '\''~/.rvm/scripts/rvm'\'''
-
 alias doco='docker-compose'
 alias dp='docker system prune -a'
-alias gb='export GIT_BRANCH=`git rev-parse --abbrev-ref HEAD`'
+alias gb='CUR_BRANCH=`git rev-parse --abbrev-ref HEAD` && export GIT_BRANCH="${CUR_BRANCH/\//-}"'
 alias dcwb='docker-compose run --rm web bash'
-
