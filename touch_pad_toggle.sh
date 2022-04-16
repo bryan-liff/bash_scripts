@@ -5,6 +5,8 @@
 #   xinput --list
 #
 # Update '--icon' paths as needed
+#
+# gawk -F seperator may need local spacing / tab adjustments, e.g. ':\t' -> ': '
 
 XINPUT_DEVICE_ID=13
 
