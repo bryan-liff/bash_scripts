@@ -28,6 +28,7 @@ alias grt=git_rename_tag
 #Usage: grt OLD_TAG NEW_TAG
 
 alias doco='docker-compose'
+alias docod='docker-compose down --remove-orphans'
 alias dp='docker system prune -a'
 alias gb='CUR_BRANCH=`git rev-parse --abbrev-ref HEAD` && export GIT_BRANCH="${CUR_BRANCH/\//-}"'
-alias dcwb='docker-compose run --rm web bash'
+alias drn='docker rmi $(docker images --filter "dangling=true" -q --no-trunc)'
