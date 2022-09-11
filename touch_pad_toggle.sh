@@ -8,7 +8,7 @@
 #
 # gawk -F seperator may need local spacing / tab adjustments, e.g. ':\t' -> ': '
 
-XINPUT_DEVICE_ID=13
+XINPUT_DEVICE_ID=`xinput --list|grep 'Touchpad'|awk '{print $6}'|awk '{split($0, arr, "="); print arr[2]}'`
 
 if [ $(xinput list-props $XINPUT_DEVICE_ID | grep 'Device Enabled' | gawk -F ':\t' '{ print $2 }') -eq 0 ]; then
   xinput enable $XINPUT_DEVICE_ID
@@ -17,4 +17,3 @@ else
   xinput disable $XINPUT_DEVICE_ID
   notify-send --icon=/usr/share/icons/Yaru/scalable/status/touchpad-disabled-symbolic.svg "Disabled" "Your computer's touchpad is disabled."
 fi
-
