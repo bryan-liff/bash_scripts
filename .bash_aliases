@@ -27,8 +27,8 @@ git_rename_tag() {
 alias grt=git_rename_tag
 #Usage: grt OLD_TAG NEW_TAG
 
-alias doco='docker-compose'
-alias docod='docker-compose down --remove-orphans'
+alias doco='docker compose'
+alias docod='docker compose down --remove-orphans'
 alias dp='docker system prune -a'
 alias gb='CUR_BRANCH=`git rev-parse --abbrev-ref HEAD` && export GIT_BRANCH="${CUR_BRANCH/\//-}"'
 alias drn='docker rmi -f $(docker images --filter "dangling=true" -q --no-trunc)'
